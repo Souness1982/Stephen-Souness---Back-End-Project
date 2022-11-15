@@ -14,7 +14,7 @@ beforeEach(() => {
   return seed(testData);
 });
 
-describe.only("/api/categories", () => {
+describe("/api/categories", () => {
   test("GET - 200: responds with an array of category objects, each with the following properties: slug, description", () => {
     return request(app)
       .get("/api/categories")
