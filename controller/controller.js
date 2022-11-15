@@ -6,7 +6,5 @@ exports.getCategories = (req, res) => {
       console.log(categories);
       res.status(200).send({ categories });
     })
-    .catch((err) => {
-      console.log("error msg", err);
-    });
+    .catch((err) => {});
 };

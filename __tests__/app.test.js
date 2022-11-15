@@ -33,4 +33,14 @@ describe("/api/categories", () => {
         });
       });
   });
+  test("GET - 404 Invalid path", () => {
+    return request(app)
+      .get("/api/kategories")
+      .expect(404)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Invalid Path");
+        });
+      });
+  });
 });
