@@ -1,0 +1,50 @@
+const app = require("../app");
+
+app.use(express.json());
+// for patch/post requests
+
+app.js;
+
+app.get("/api/reviews/:review_id", getReviewById);
+
+constolller.js;
+
+exports.getReviewById = (req, res) => {
+  const { review_id } = req.params;
+  selectReviewById(review_id).then((review) =>
+    res.status(200).send({ review })
+  );
+};
+
+models.js;
+
+exports.selectReviewById = () => {
+  return db.query(// test on sql sheet);
+};
+
+app.test.js;
+
+describe("/api/reviews/:review_id", () => {
+    test("GET - 200, responds with a single matching review", () => {
+      const reviewId = 3;
+      return request(app)
+        .get(`/api/reviews/${reviewId}`)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.review).toEqual({
+            name: "sarah",
+            review_id: 3,
+            title: "Ultimate Werewolf",
+            category: "social deduction",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            created_at: new Date(1610964101251),
+            votes: 5,
+            designer: "Akihisa Okui",
+            count: "3",
+          });
+        });
+    });
+  });
+
+
