@@ -122,4 +122,15 @@ describe("/api/reviews/:review_id", () => {
         expect(body.msg).toBe("review not found");
       });
   });
+  test("GET - 404 Invalid path", () => {
+    const reviewId = 2;
+    return request(app)
+      .get(`/api/previews/${reviewId}`)
+      .expect(404)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Invalid path");
+        });
+      });
+  });
 });
