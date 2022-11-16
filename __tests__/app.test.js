@@ -44,3 +44,50 @@ describe("/api/categories", () => {
       });
   });
 });
+
+describe("/api/reviews", () => {
+  test("GET - 200: responds with an array of review objects, ordered by the created_at key", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(categories.length).toBeGreaterThan(3);
+        expect(reviews).toBeInstanceOf(Array);
+        reviews.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              name: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: expect.any(String),
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              designer: expect.any(String),
+              count: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  test("GET: 200 - array of reviews is sorted by created_at column", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=created_at")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+
+  test("GET - 404 Invalid path", () => {
+    return request(app)
+      .get("/api/previews")
+      .expect(404)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Invalid Path");
+        });
+      });
+  });
+});
