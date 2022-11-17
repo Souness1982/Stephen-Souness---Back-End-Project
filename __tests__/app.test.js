@@ -122,25 +122,14 @@ describe("/api/reviews/:review_id", () => {
         expect(body.msg).toBe("review ID not found");
       });
   });
-  test("GET - 404 Invalid path", () => {
-    const reviewId = 2;
-    return request(app)
-      .get(`/api/previews/${reviewId}`)
-      .expect(404)
-      .then((res) => {
-        expect((res) => {
-          expect(res.body.msg).toBe("Invalid path");
-        });
-      });
-  });
 
-  test("GET - 500 Internal Server Error", () => {
+  test("GET - 400 Bad Request when Id is not a number", () => {
     return request(app)
       .get(`/api/reviews/bananas`)
-      .expect(500)
+      .expect(400)
       .then((res) => {
         expect((res) => {
-          expect(res.body.msg).toBe("Internal Server Error");
+          expect(res.body.msg).toBe("Id is not a number");
         });
       });
   });

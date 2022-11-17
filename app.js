@@ -21,8 +21,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).send({ msg: "server error!" });
+  res.status(400).send({ msg: "Id is not a number" });
 });
 
 module.exports = app;
