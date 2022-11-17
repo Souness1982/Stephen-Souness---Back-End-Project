@@ -1,3 +1,4 @@
+const { TestWatcher } = require("jest");
 const app = require("../app");
 
 app.use(express.json());
@@ -5,46 +6,77 @@ app.use(express.json());
 
 app.js;
 
-app.get("/api/reviews/:review_id", getReviewById);
+app.get("/api/reviews/:review_id/comments", getReviewIdComments);
 
 constolller.js;
 
-exports.getReviewById = (req, res) => {
+exports.getReviewIdComments = (req, res, next) => {
   const { review_id } = req.params;
-  selectReviewById(review_id).then((review) =>
-    res.status(200).send({ review })
-  );
+  selectReviewIdComments(review_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 models.js;
 
-exports.selectReviewById = () => {
-  return db.query(// test on sql sheet);
+exports.selectReviewIdComments = (review_id) => {
+  return db
+    .query(
+      `SELECT comment_id, votes, created_at, author, body, review_id FROM comments WHERE review_id = $1;`,
+      [review_id]
+    )
+    .then((res) => {
+      if (res.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "review ID not found" });
+      }
+      return res.rows;
+    });
 };
 
-app.test.js;
-
-describe("/api/reviews/:review_id", () => {
-    test("GET - 200, responds with a single matching review", () => {
-      const reviewId = 3;
-      return request(app)
-        .get(`/api/reviews/${reviewId}`)
-        .expect(200)
-        .then(({ body }) => {
-          expect(body.review).toEqual({
-            name: "sarah",
-            review_id: 3,
-            title: "Ultimate Werewolf",
-            category: "social deduction",
-            review_img_url:
-              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-            created_at: new Date(1610964101251),
-            votes: 5,
-            designer: "Akihisa Okui",
-            count: "3",
+test.app.js;
+describe("/api/reviews/:review_id/comments", () => {
+  test("GET - 200, responds with array of comments for given review_id", () => {
+    const reviewId = 3;
+    return request(app)
+      .get(`/api/reviews/${reviewId}/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toHaveLength(3);
+        body.comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            review_id: expect.any(Number),
           });
         });
-    });
+      });
+  });
+  test("GET - 404 - non existent review_id", () => {
+    const reviewId = 655;
+    return request(app)
+      .get(`/api/reviews/${reviewId}/comments`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("review ID not found");
+      });
   });
 
-
+  test("GET - 404 Invalid path", () => {
+    const reviewId = 2;
+    return request(app)
+      .get(`/api/previews/${reviewId}/comments`)
+      .expect(404)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Invalid path");
+        });
+      });
+  });
+});

@@ -91,3 +91,46 @@ describe("/api/reviews", () => {
       });
   });
 });
+
+describe("/api/reviews/:review_id", () => {
+  test("GET - 200, responds with a single matching review", () => {
+    const reviewId = 3;
+    return request(app)
+      .get(`/api/reviews/${reviewId}`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.review).toEqual({
+          review_id: 3,
+          title: "Ultimate Werewolf",
+          review_body: "We couldn't find the werewolf!",
+          designer: "Akihisa Okui",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          votes: 5,
+          category: "social deduction",
+          owner: "bainesface",
+          created_at: "2021-01-18T10:01:41.251Z",
+        });
+      });
+  });
+  test("GET: 404 - non existant review_id", () => {
+    const reviewId = 655;
+    return request(app)
+      .get(`/api/reviews/${reviewId}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("review ID not found");
+      });
+  });
+
+  test("GET - 400 Bad Request when Id is not a number", () => {
+    return request(app)
+      .get(`/api/reviews/bananas`)
+      .expect(400)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Id is not a number");
+        });
+      });
+  });
+});
