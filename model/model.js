@@ -49,3 +49,13 @@ exports.selectReviewIdComments = (review_id) => {
       return res.rows;
     });
 };
+
+exports.insertComment = (review_id, comment) => {
+  const { userName, body } = comment;
+  const queryStr = `INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *;`;
+  // [review_id];
+  const queryValues = [review_id, userName, body];
+  return db.query(queryStr, queryValues).then((result) => {
+    return result.rows[0];
+  });
+};

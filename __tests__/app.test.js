@@ -122,7 +122,7 @@ describe("/api/reviews/:review_id", () => {
         expect(body.msg).toBe("review ID not found");
       });
   });
-test("GET - 400 Id is not a number", () => {
+  test("GET - 400 Id is not a number", () => {
     return request(app)
       .get(`/api/reviews/bananas`)
       .expect(400)
@@ -176,6 +176,61 @@ describe("/api/reviews/:review_id/comments", () => {
       });
   });
   test("GET - 400 Id is not a number", () => {
+    return request(app)
+      .get(`/api/reviews/bananas/comments`)
+      .expect(400)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Id is not a number");
+        });
+      });
+  });
+});
+
+describe("/api/reviews/:review_id/comments", () => {
+  test("POST - 201 add a new comment to the DB and responds with an object containing the new comment", () => {
+    const reviewId = 3;
+    return request(app)
+      .post(`/api/reviews/${reviewId}/comments`)
+      .send({
+        userName: "philippaclaire9",
+        body: "Hello there!",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual({
+          author: "philippaclaire9",
+          body: "Hello there!",
+          votes: expect.any(Number),
+          review_id: expect.any(Number),
+          created_at: expect.any(String),
+          comment_id: expect.any(Number),
+        });
+      });
+  });
+  test("POST - 404 - non existent review_id", () => {
+    const reviewId = 655;
+    return request(app)
+      .get(`/api/reviews/${reviewId}/comments`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("review ID not found");
+      });
+  });
+
+  test("POST - 404 Invalid path", () => {
+    const reviewId = 2;
+    return request(app)
+      .get(`/api/previews/${reviewId}/comments`)
+      .expect(404)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Invalid path");
+        });
+      });
+  });
+
+  test("POST - 400 Id is not a number", () => {
     return request(app)
       .get(`/api/reviews/bananas/comments`)
       .expect(400)
