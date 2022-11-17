@@ -35,3 +35,17 @@ exports.selectReviewById = (review_id) => {
       return res.rows[0];
     });
 };
+
+exports.selectReviewIdComments = (review_id) => {
+  return db
+    .query(
+      `SELECT comment_id, votes, created_at, author, body, review_id FROM comments WHERE review_id = $1;`,
+      [review_id]
+    )
+    .then((res) => {
+      if (res.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "review ID not found" });
+      }
+      return res.rows;
+    });
+};
