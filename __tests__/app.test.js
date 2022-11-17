@@ -119,10 +119,10 @@ describe("/api/reviews/:review_id", () => {
       .get(`/api/reviews/${reviewId}`)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("review not found");
+        expect(body.msg).toBe("review ID not found");
       });
   });
-  test("GET - 400 Id is not a number", () => {
+test("GET - 400 Id is not a number", () => {
     return request(app)
       .get(`/api/reviews/bananas`)
       .expect(400)
