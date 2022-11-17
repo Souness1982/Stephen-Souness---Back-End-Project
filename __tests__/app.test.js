@@ -143,14 +143,32 @@ describe("/api/reviews/:review_id/comments", () => {
       .then(({ body }) => {
         expect(body.comments).toHaveLength(3);
         body.comments.forEach((comment) => {
-          expect(comment).toMatchObject({
-            comment_id: expect.any(Number),
-            votes: expect.any(Number),
-            created_at: expect.any(String),
-            author: expect.any(String),
-            body: expect.any(String),
-            review_id: expect.any(Number),
-          });
+          expect(body.comments).toEqual([
+            {
+              author: "mallionaire",
+              body: "My dog loved this game too!",
+              comment_id: 2,
+              created_at: "2021-01-18T10:09:05.410Z",
+              review_id: 3,
+              votes: 13,
+            },
+            {
+              author: "philippaclaire9",
+              body: "I didn't know dogs could play games",
+              comment_id: 3,
+              created_at: "2021-01-18T10:09:48.110Z",
+              review_id: 3,
+              votes: 10,
+            },
+            {
+              author: "philippaclaire9",
+              body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+              comment_id: 6,
+              created_at: "2021-03-27T19:49:48.110Z",
+              review_id: 3,
+              votes: 10,
+            },
+          ]);
         });
       });
   });
