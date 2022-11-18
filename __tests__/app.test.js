@@ -208,20 +208,11 @@ describe("/api/reviews/:review_id/comments", () => {
         });
       });
   });
-  test("POST - 404 - non existent review_id", () => {
-    const reviewId = 655;
-    return request(app)
-      .get(`/api/reviews/${reviewId}/comments`)
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("review ID not found");
-      });
-  });
 
   test("POST - 404 Invalid path", () => {
     const reviewId = 2;
     return request(app)
-      .get(`/api/previews/${reviewId}/comments`)
+      .post(`/api/previews/${reviewId}/comments`)
       .expect(404)
       .then((res) => {
         expect((res) => {
@@ -232,7 +223,7 @@ describe("/api/reviews/:review_id/comments", () => {
 
   test("POST - 400 Id is not a number", () => {
     return request(app)
-      .get(`/api/reviews/bananas/comments`)
+      .post(`/api/reviews/bananas/comments`)
       .expect(400)
       .then((res) => {
         expect((res) => {
@@ -240,4 +231,45 @@ describe("/api/reviews/:review_id/comments", () => {
         });
       });
   });
+
+  test("POST - 404 username not found - Bad Request", () => {
+    const reviewId = 3;
+    return request(app)
+      .post(`/api/reviews/${reviewId}/comments`)
+      .send({
+        author: "erhnipnopsdnfpnpovjsfpohnwe",
+        body: "Hello there!",
+        votes: expect.any(Number),
+        review_id: expect.any(Number),
+        created_at: expect.any(String),
+        comment_id: expect.any(Number),
+      })
+      .expect(400)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Bad Request");
+        });
+      });
+  });
+
+  test("POST - body missing - Bad Request", () => {
+    const reviewId = 3;
+    return request(app)
+      .post(`/api/reviews/${reviewId}/comments`)
+      .send({
+        author: "philippaclaire9",
+        votes: expect.any(Number),
+        review_id: expect.any(Number),
+        created_at: expect.any(String),
+        comment_id: expect.any(Number),
+      })
+      .expect(400)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Bad Request");
+        });
+      });
+  });
 });
+
+// Urgh struggling with this!!

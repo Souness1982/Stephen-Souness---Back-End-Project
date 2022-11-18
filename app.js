@@ -30,6 +30,7 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.log(err);
+
   res.status(400).send({ msg: "Id is not a number" });
 });
 

@@ -42,9 +42,13 @@ exports.getReviewIdComments = (req, res, next) => {
     });
 };
 
-exports.postComment = (req, res) => {
+exports.postComment = (req, res, next) => {
   const { review_id } = req.params;
-  insertComment(review_id, req.body).then((comment) => {
-    res.status(201).send({ comment });
-  });
+  insertComment(review_id, req.body)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

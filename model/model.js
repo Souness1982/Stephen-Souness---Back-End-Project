@@ -46,6 +46,7 @@ exports.selectReviewIdComments = (review_id) => {
       if (res.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "review ID not found" });
       }
+
       return res.rows;
     });
 };
@@ -55,7 +56,9 @@ exports.insertComment = (review_id, comment) => {
   const queryStr = `INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *;`;
   // [review_id];
   const queryValues = [review_id, userName, body];
+
   return db.query(queryStr, queryValues).then((result) => {
+    console.log(result.rows[0]);
     return result.rows[0];
   });
 };
