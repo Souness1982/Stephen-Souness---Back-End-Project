@@ -58,7 +58,6 @@ exports.insertComment = (review_id, comment) => {
   const queryValues = [review_id, userName, body];
 
   return db.query(queryStr, queryValues).then((result) => {
-    console.log(result.rows[0]);
     return result.rows[0];
   });
 };
