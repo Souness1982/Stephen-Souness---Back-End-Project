@@ -61,3 +61,14 @@ exports.insertComment = (review_id, comment) => {
     return result.rows[0];
   });
 };
+
+exports.patchVotesById = (review_id, body) => {
+  console.log(body);
+  const queryStr = `UPDATE reviews SET votes = votes + $1 WHERE review_id = $2 RETURNING *;`;
+  const queryValues = [body.votes, review_id];
+
+  return db.query(queryStr, queryValues).then((updatedVotes) => {
+    console.log(updatedVotes.rows[0]);
+    return updatedVotes.rows[0];
+  });
+};
