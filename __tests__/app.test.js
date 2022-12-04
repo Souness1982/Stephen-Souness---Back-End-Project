@@ -272,4 +272,61 @@ describe("/api/reviews/:review_id/comments", () => {
   });
 });
 
-// Urgh struggling with this!!
+describe("/api/reviews/:review_id", () => {
+  test("PATCH - 200 responds with the updated vote", () => {
+    const votesUpdate = { votes: 4 };
+    return request(app)
+      .patch("/api/reviews/3")
+      .send(votesUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.review).toEqual({
+          review_id: 3,
+          title: "Ultimate Werewolf",
+          category: "social deduction",
+          designer: "Akihisa Okui",
+          owner: "bainesface",
+          review_body: "We couldn't find the werewolf!",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          created_at: "2021-01-18T10:01:41.251Z",
+          votes: 9,
+        });
+      });
+  });
+
+  test("PATCH - 404 Invalid path", () => {
+    const reviewId = 3;
+    return request(app)
+      .patch(`/api/previews/${reviewId}`)
+      .expect(404)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Invalid path");
+        });
+      });
+  });
+
+  test("PATCH - votes missing - Bad Request", () => {
+    const reviewId = 3;
+    return request(app)
+      .patch(`/api/reviews/${reviewId}`)
+      .send({
+        review_id: 3,
+        title: "Ultimate Werewolf",
+        category: "social deduction",
+        designer: "Akihisa Okui",
+        owner: "bainesface",
+        review_body: "We couldn't find the werewolf!",
+        review_img_url:
+          "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+        created_at: "2021-01-18T10:01:41.251Z",
+      })
+      .expect(400)
+      .then((res) => {
+        expect((res) => {
+          expect(res.body.msg).toBe("Bad Request");
+        });
+      });
+  });
+});
